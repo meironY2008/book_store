@@ -21,6 +21,11 @@ const booksSchema = new mongoose.Schema({
   price: Number,
   year: Number,
   image: String,
+  amount: Number,
+  description: String,
+  grade: Number,
+  language: String,
+  publishing: String,
 });
 
 booksSchema.set("toJSON", {

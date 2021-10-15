@@ -11,7 +11,7 @@ import { grey, indigo } from "@material-ui/core/colors";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: grey[900],
+      main: "#030303",
     },
     contrastThreshold: 3,
     tonalOffset: 0.2,
@@ -21,9 +21,10 @@ const theme = createMuiTheme({
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    color:"#000"
   },
   title: {
-    width: 400,
+    width: 350,
     alignSelf: "center",
     display: "none",
     [theme.breakpoints.up("md")]: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TopBar(props) {
+function TopBar() {
   const classes = useStyles();
 
   return (
