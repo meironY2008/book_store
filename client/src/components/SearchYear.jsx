@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -10,20 +10,17 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
-export default function SearchYears({
-  firstYear,
-  setFirstYear,
-  secondYear,
-  setSecondYear,
-}) {
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import IconButton from "@mui/material/IconButton";
+const SearchYear = ({year, setUnder, under, setYear }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleChange = (event) => {
-    setSecondYear(Number(event.target.value) || "");
+    setYear(Number(event.target.value) || "");
   };
-  const handleChangeFirstYear = (event) => {
-    setFirstYear(Number(event.target.value) || "");
+  const handleChangeUnder = (event) => {
+    setUnder(!under);
   };
 
   const handleClickOpen = () => {
@@ -35,52 +32,35 @@ export default function SearchYears({
       setOpen(false);
     }
   };
-
   return (
     <div>
       <Button
         onClick={handleClickOpen}
-        style={{ color: "#233489", marginRight: "78vw" }}
+        style={{ color: "#233489", marginRight: "75vw" }}
       >
-        Select Years
+        Select Year
       </Button>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogTitle>Select Years</DialogTitle>
+        <DialogTitle>Select Year</DialogTitle>
         <DialogContent>
           <Box
             component="form"
-            sx={{ display: "flex", flexWrap: "wrap", minWidth: "250px" }}
+            sx={{ display: "flex", flexWrap: "wrap", minWidth: "200px" }}
           >
-            <FormControl key={1} sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel htmlFor="demo-dialog-native">First Year</InputLabel>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel htmlFor="demo-dialog-native">Year</InputLabel>
               <Select
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"
-                value={firstYear}
-                onChange={handleChangeFirstYear}
-                input={<OutlinedInput label="First Year" />}
+                value={year}
+                onChange={handleChange}
+                input={<OutlinedInput label="Year" />}
               >
                 {new Array(100).fill().map((_, i) => (
                   <MenuItem value={2022 - i}>{2022 - i}</MenuItem>
                 ))}
               </Select>
             </FormControl>
-            {firstYear > 0 && (
-              <FormControl key={2} sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-dialog-select-label">Second Year</InputLabel>
-                <Select
-                  labelId="demo-dialog-select-label"
-                  id="demo-dialog-select"
-                  value={secondYear}
-                  onChange={handleChange}
-                  input={<OutlinedInput label="Second Year" />}
-                >
-                  {new Array(2022 - firstYear).fill().map((_, i) => (
-                    <MenuItem value={2022 - i}>{2022 - i}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
           </Box>
         </DialogContent>
         <DialogActions>
@@ -88,6 +68,17 @@ export default function SearchYears({
           <Button onClick={handleClose}>Ok</Button>
         </DialogActions>
       </Dialog>
+      {under ? (
+        <IconButton onClick={handleChangeUnder}>
+          <ArrowDownwardIcon />
+        </IconButton>
+      ) : (
+        <IconButton onClick={handleChangeUnder}>
+          <ArrowUpwardIcon />
+        </IconButton>
+      )}
     </div>
   );
-}
+};
+
+export default SearchYear;

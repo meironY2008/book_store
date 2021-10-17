@@ -1,29 +1,46 @@
-import logo from "./logo.svg";
+import { useState, useEffect } from "react";
 import "./App.css";
 import TopBar from "./components/TopBar";
 import Search from "./components/Search";
+import BookCard from "./components/BookCard";
+import { Container, Grid } from "@material-ui/core";
 function App() {
-  // const [books, setBooks] = useState([]);
-  // const [searchText, setSearchText] = useState('');
-  // const fetchData = async (query) => {
-  //   const pastes = await fetch(`/pastes?search=${query}`).then((res) => res.json());
-  //   setPastes(pastes.reverse());
-  // };
+  const [books, setBooks] = useState([]);
+  console.log(books);
 
-  // const handleSearch = (e) => {
-  //   setSearchText(e.target.value);
-  // }
-
-  // useEffect(() => {
-  //   fetchData(searchText);
-  // }, [searchText]);
+  useEffect(() => {
+    console.log(books);
+  }, [books]);
 
   return (
     <div>
       <TopBar />
-      <Search />
-      <div></div>
-      <div>fotter</div>
+      <Search setBooks={setBooks} />
+      <Container maxWidth="md" style={{height:"50vh"}}>
+        <div className="App">
+          <Grid container spacing={4} justify="center">
+            {books.length > 0 &&
+              books.map((book, index) => (
+                <Grid key={`book${index}`} item>
+                  <BookCard
+                    name={book.name}
+                    author={book.author}
+                    description={book.description}
+                    year={book.year}
+                    grade={book.grade}
+                    price={book.price}
+                    image={book.image}
+                    language={book.language}
+                    publishing={book.publishing}
+                    id={book.id}
+                    amount={book.amount}
+                    setBooks={setBooks}
+                  />
+                </Grid>
+              ))}
+          </Grid>
+        </div>
+      </Container>
     </div>
   );
 }

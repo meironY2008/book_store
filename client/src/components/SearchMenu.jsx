@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -7,7 +6,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MenuIcon from "@mui/icons-material/Menu";
-import IconButton from "@mui/material/IconButton";
+import { useState } from "react";
+import Form from "./Form";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import axios from "axios";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -51,15 +58,46 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function SearchMenu({ setSearchType }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+export default function SearchMenu({ handleChangeType, setBooks }) {
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [openAdd, setOpenAdd] = useState(false);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const handeleClickAddBook = (e) => {
+    handleClose(e);
+    setOpenAdd(true);
+  };
   const handleClose = (e) => {
-    setSearchType(e.target.value);
+    handleChangeType(e.target.value ? e.target.value : 1);
     setAnchorEl(null);
+  };
+  const handleCloseAdd = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenAdd(false);
+    }
+  };
+  const postBook = async (book) => {
+    try {
+      const { data } = await axios.post(`http://localhost:8080/books`, {
+        name: book.name,
+        image: book.image,
+        price: book.price,
+        language: book.language,
+        grade: book.grade,
+        year: book.year,
+        author: book.author,
+        description: book.description,
+        amount: book.amount,
+        publishing: book.publishing,
+      });
+      setBooks(data);
+      handleCloseAdd();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -72,7 +110,7 @@ export default function SearchMenu({ setSearchType }) {
         variant="contained"
         disableElevation
         onClick={handleClick}
-        style={{backgroundColor:"#233489"}}
+        style={{ backgroundColor: "#233489", borderRadius: "100px" }}
       >
         <MenuIcon />
       </Button>
@@ -86,18 +124,26 @@ export default function SearchMenu({ setSearchType }) {
         onClose={handleClose}
       >
         <MenuItem value={1} onClick={handleClose} disableRipple>
-          <EditIcon />
+          <MenuBookIcon />
           Search By Name
         </MenuItem>
         <MenuItem value={2} onClick={handleClose} disableRipple>
-          <FileCopyIcon />
+          <CalendarTodayIcon />
           Search By Year
         </MenuItem>
         <MenuItem value={3} onClick={handleClose} disableRipple>
-          <ArchiveIcon />
+          <AccessTimeFilledIcon />
           Search Between Years
         </MenuItem>
+        <MenuItem value={1} onClick={handeleClickAddBook} disableRipple>
+          <AddCircleIcon />
+          Add New Book
+        </MenuItem>
       </StyledMenu>
+      <Dialog disableEscapeKeyDown open={openAdd} onClose={handleCloseAdd}>
+        <DialogTitle>Add Book</DialogTitle>
+        <Form fetchBook={postBook} handleClose={handleCloseAdd} />
+      </Dialog>
     </div>
   );
 }
